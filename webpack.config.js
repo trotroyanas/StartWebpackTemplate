@@ -21,24 +21,7 @@ let config = {
             // both options are optional
             filename: '[name].[chunkhash:8].css',
             chunkFilename: '[id].css',
-        }), new HtmlWebpackPlugin({
-            title: 'My App',
-            filename: 'index.html',
-            meta: { "viewport": 'width=device-width, initial-scale=1.0' },
-            meta: { "http-equiv": "X-UA-Compatible", "content": "ie=edge" },
-            /*
-            minify: {
-                minify: false,
-                collapseWhitespace: true,
-                removeComments: true,
-                removeRedundantAttributes: true,
-                removeScriptTypeAttributes: true,
-                removeStyleLinkTypeAttributes: true,
-                useShortDoctype: true
-            },
-            */
-        }),
-        new CleanWebpackPlugin(),
+        }), new CleanWebpackPlugin(),
     ],
     module: {
         rules: [
@@ -82,11 +65,48 @@ let config = {
     optimization: {
         minimizer: [
             new UglifyJsPlugin({ sourceMap: true }),
-            new OptimizeCSSAssetsPlugin({}),
+            new OptimizeCSSAssetsPlugin(),
         ],
     },
 
 }
 
 
-module.exports = config
+//module.exports = config
+
+
+module.exports = (env, argv) => {
+
+    if (argv.mode === 'development') {
+        config.plugins.push(
+            new HtmlWebpackPlugin({
+                title: 'My App',
+                filename: 'index.html',
+                meta: { "viewport": 'width=device-width, initial-scale=1.0' },
+                meta: { "http-equiv": "X-UA-Compatible", "content": "ie=edge" }
+            })
+        )
+    }
+
+    if (argv.mode === 'production') {
+        config.plugins.push(
+            new HtmlWebpackPlugin({
+                title: 'My App',
+                filename: 'index.html',
+                meta: { "viewport": 'width=device-width, initial-scale=1.0' },
+                meta: { "http-equiv": "X-UA-Compatible", "content": "ie=edge" },
+                minify: {
+                    minify: false,
+                    collapseWhitespace: true,
+                    removeComments: true,
+                    removeRedundantAttributes: true,
+                    removeScriptTypeAttributes: true,
+                    removeStyleLinkTypeAttributes: true,
+                    useShortDoctype: true
+                },
+            })
+        )
+    }
+
+    return config;
+};
