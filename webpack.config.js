@@ -7,7 +7,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 
 let config = {
-    entry: { app: './src/server/server.js' },
+    entry: { app: ['./src/css/app.scss', './src/server/server.js'] },
     watch: true,
     output: {
         path: path.resolve('./dist'),
@@ -40,9 +40,10 @@ let config = {
                     {
                         loader: MiniCssExtractPlugin.loader,
                         options: {
+                            /*
                             publicPath: (resourcePath, context) => {
                                 return path.relative(path.dirname(resourcePath), context) + '/';
-                            },
+                            },*/
                             reloadAll: true,
                         }
                     },
@@ -57,7 +58,24 @@ let config = {
                             ]
                         }
                     },
-                    'sass-loader',
+                    { loader: 'sass-loader', options: { sourceMap: true } },
+                ]
+            }, {
+                test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+                use: [{ loader: 'file-loader' }]
+            },
+
+            {
+                //test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf|wav)(\?.*)?$/,
+                test: /\.(png|jpg|gif|svg)$/,
+                use: [
+                    {
+                        loader: 'url-loader',
+                        options: {
+                            limit: 8192,
+                            name: '[name].[hash:7].[ext]',
+                        }
+                    }
                 ]
             },
         ]
@@ -76,6 +94,8 @@ let config = {
 
 
 module.exports = (env, argv) => {
+
+    console.log(argv.mode)
 
     if (argv.mode === 'development') {
         config.plugins.push(
@@ -107,6 +127,7 @@ module.exports = (env, argv) => {
             })
         )
     }
+
 
     return config;
 };
