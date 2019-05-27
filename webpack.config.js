@@ -25,6 +25,7 @@ let config = {
     },
     devtool: "source-map",
     devServer: {
+        overlay: true,
         contentBase: path.resolve('./dist')
     },
     plugins: [
