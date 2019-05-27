@@ -1,2 +1,3 @@
 import log from "@/log.js"
-console.log(log("Salut guys..."))
+console.log("Test JS...")
+log("Salut guys...")

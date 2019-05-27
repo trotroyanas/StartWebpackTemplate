@@ -14,7 +14,7 @@ let config = {
     watch: true,
     output: {
         path: path.resolve('./dist'),
-        filename: '[name].[chunkhash:8].js',
+        filename: '[name].[hash:8].js',
         publicPath: ""
     },
     resolve: {
@@ -24,6 +24,9 @@ let config = {
         }
     },
     devtool: "source-map",
+    devServer: {
+        contentBase: path.resolve('./dist')
+    },
     plugins: [
         new MiniCssExtractPlugin({
             // Options similar to the same options in webpackOptions.output
