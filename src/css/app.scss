@@ -3,4 +3,5 @@ $bkg : #fff;
 body {
     background: $bkg url('./bkg.jpg');
     transform: translateX(25px);
+    color: #fff;
 }

@@ -38,83 +38,83 @@ let config = {
     ],
     module: {
         rules: [{
-                enforce: 'pre',
-                test: /\.m?js$/,
-                exclude: /(node_modules|bower_components)/,
-                use: [{
-                    loader: 'eslint-loader'
-                }]
-            },
-            {
-                test: /\.m?js$/,
-                exclude: /(node_modules|bower_components)/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ['@babel/preset-env']
-                    }
+            enforce: 'pre',
+            test: /\.m?js$/,
+            exclude: /(node_modules|bower_components)/,
+            use: [{
+                loader: 'eslint-loader'
+            }]
+        },
+        {
+            test: /\.m?js$/,
+            exclude: /(node_modules|bower_components)/,
+            use: {
+                loader: 'babel-loader',
+                options: {
+                    presets: ['@babel/preset-env']
+                }
+            }
+        },
+        {
+            test: /\.(sa|sc|c)ss$/,
+            use: [{
+                loader: MiniCssExtractPlugin.loader,
+                options: {
+                    /*
+                    publicPath: (resourcePath, context) => {
+                        return path.relative(path.dirname(resourcePath), context) + '/';
+                    },*/
+                    reloadAll: true,
                 }
             },
             {
-                test: /\.(sa|sc|c)ss$/,
-                use: [{
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            /*
-                            publicPath: (resourcePath, context) => {
-                                return path.relative(path.dirname(resourcePath), context) + '/';
-                            },*/
-                            reloadAll: true,
-                        }
-                    },
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            importLoaders: 1
-                        }
-                    },
-                    {
-                        loader: 'postcss-loader',
-                        options: {
-                            plugins: (loader) => [
-                                require('autoprefixer')({
-                                    browsers: ['last 3 version', 'ie > 8']
-                                })
-                            ]
-                        }
-                    },
-                    {
-                        loader: 'sass-loader',
-                        options: {
-                            sourceMap: true
-                        }
-                    },
-                ]
+                loader: 'css-loader',
+                options: {
+                    importLoaders: 1
+                }
             },
             {
-                test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-                use: [{
-                    loader: 'file-loader'
-                }]
+                loader: 'postcss-loader',
+                options: {
+                    plugins: (loader) => [
+                        require('autoprefixer')({
+                            browsers: ['last 3 version', 'ie > 8']
+                        })
+                    ]
+                }
             },
+            {
+                loader: 'sass-loader',
+                options: {
+                    sourceMap: true
+                }
+            },
+            ]
+        },
+        {
+            test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+            use: [{
+                loader: 'file-loader'
+            }]
+        },
 
-            {
-                //test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf|wav)(\?.*)?$/,
-                test: /\.(png|jpg|gif|svg)$/,
-                use: [{
-                    loader: 'url-loader',
-                    options: {
-                        limit: 8192,
-                        name: '[name].[hash:7].[ext]',
-                    }
-                }, {
-                    loader: 'img-loader',
-                    options: {
-                        enable: false,
-                        plugins: []
-                    }
-                }]
-            },
+        {
+            //test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf|wav)(\?.*)?$/,
+            test: /\.(png|jpg|gif|svg)$/,
+            use: [{
+                loader: 'url-loader',
+                options: {
+                    limit: 8192,
+                    name: '[name].[hash:7].[ext]',
+                }
+            }, {
+                loader: 'img-loader',
+                options: {
+                    enable: false,
+                    plugins: []
+                }
+            }]
+        },
         ]
     },
     optimization: {
@@ -139,15 +139,7 @@ module.exports = (env, argv) => {
     if (argv.mode === 'development') {
         config.plugins.push(
             new HtmlWebpackPlugin({
-                title: 'My App',
-                filename: 'index.html',
-                meta: {
-                    "viewport": 'width=device-width, initial-scale=1.0'
-                },
-                meta: {
-                    "http-equiv": "X-UA-Compatible",
-                    "content": "ie=edge"
-                }
+                template: 'src/index.html'
             })
         )
     }
@@ -155,15 +147,8 @@ module.exports = (env, argv) => {
     if (argv.mode === 'production') {
         config.plugins.push(
             new HtmlWebpackPlugin({
-                title: 'My App',
                 filename: 'index.html',
-                meta: {
-                    "viewport": 'width=device-width, initial-scale=1.0'
-                },
-                meta: {
-                    "http-equiv": "X-UA-Compatible",
-                    "content": "ie=edge"
-                },
+                template: 'src/index.html',
                 minify: {
                     minify: false,
                     collapseWhitespace: true,
