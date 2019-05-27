@@ -1,4 +1,2 @@
-import log from './log.js'
-
-
-console.log("salut les gens...")
+import log from "@/log.js"
+console.log(log("Salut guys..."))

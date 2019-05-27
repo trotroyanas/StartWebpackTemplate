@@ -6,13 +6,22 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 
+
 let config = {
-    entry: { app: ['./src/css/app.scss', './src/server/server.js'] },
+    entry: {
+        app: ['./src/css/app.scss', './src/server/server.js']
+    },
     watch: true,
     output: {
         path: path.resolve('./dist'),
         filename: '[name].[chunkhash:8].js',
         publicPath: ""
+    },
+    resolve: {
+        alias: {
+            '@css': path.resolve(__dirname, './src/css/'),
+            '@': path.resolve(__dirname, './src/server/'),
+        }
     },
     devtool: "source-map",
     plugins: [
@@ -24,7 +33,14 @@ let config = {
         }), new CleanWebpackPlugin(),
     ],
     module: {
-        rules: [
+        rules: [{
+                enforce: 'pre',
+                test: /\.m?js$/,
+                exclude: /(node_modules|bower_components)/,
+                use: [{
+                    loader: 'eslint-loader'
+                }]
+            },
             {
                 test: /\.m?js$/,
                 exclude: /(node_modules|bower_components)/,
@@ -34,10 +50,10 @@ let config = {
                         presets: ['@babel/preset-env']
                     }
                 }
-            }, {
+            },
+            {
                 test: /\.(sa|sc|c)ss$/,
-                use: [
-                    {
+                use: [{
                         loader: MiniCssExtractPlugin.loader,
                         options: {
                             /*
@@ -47,7 +63,12 @@ let config = {
                             reloadAll: true,
                         }
                     },
-                    { loader: 'css-loader', options: { importLoaders: 1 } },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            importLoaders: 1
+                        }
+                    },
                     {
                         loader: 'postcss-loader',
                         options: {
@@ -58,31 +79,45 @@ let config = {
                             ]
                         }
                     },
-                    { loader: 'sass-loader', options: { sourceMap: true } },
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            sourceMap: true
+                        }
+                    },
                 ]
-            }, {
+            },
+            {
                 test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-                use: [{ loader: 'file-loader' }]
+                use: [{
+                    loader: 'file-loader'
+                }]
             },
 
             {
                 //test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf|wav)(\?.*)?$/,
                 test: /\.(png|jpg|gif|svg)$/,
-                use: [
-                    {
-                        loader: 'url-loader',
-                        options: {
-                            limit: 8192,
-                            name: '[name].[hash:7].[ext]',
-                        }
+                use: [{
+                    loader: 'url-loader',
+                    options: {
+                        limit: 8192,
+                        name: '[name].[hash:7].[ext]',
                     }
-                ]
+                }, {
+                    loader: 'img-loader',
+                    options: {
+                        enable: false,
+                        plugins: []
+                    }
+                }]
             },
         ]
     },
     optimization: {
         minimizer: [
-            new UglifyJsPlugin({ sourceMap: true }),
+            new UglifyJsPlugin({
+                sourceMap: true
+            }),
             new OptimizeCSSAssetsPlugin(),
         ],
     },
@@ -102,8 +137,13 @@ module.exports = (env, argv) => {
             new HtmlWebpackPlugin({
                 title: 'My App',
                 filename: 'index.html',
-                meta: { "viewport": 'width=device-width, initial-scale=1.0' },
-                meta: { "http-equiv": "X-UA-Compatible", "content": "ie=edge" }
+                meta: {
+                    "viewport": 'width=device-width, initial-scale=1.0'
+                },
+                meta: {
+                    "http-equiv": "X-UA-Compatible",
+                    "content": "ie=edge"
+                }
             })
         )
     }
@@ -113,8 +153,13 @@ module.exports = (env, argv) => {
             new HtmlWebpackPlugin({
                 title: 'My App',
                 filename: 'index.html',
-                meta: { "viewport": 'width=device-width, initial-scale=1.0' },
-                meta: { "http-equiv": "X-UA-Compatible", "content": "ie=edge" },
+                meta: {
+                    "viewport": 'width=device-width, initial-scale=1.0'
+                },
+                meta: {
+                    "http-equiv": "X-UA-Compatible",
+                    "content": "ie=edge"
+                },
                 minify: {
                     minify: false,
                     collapseWhitespace: true,

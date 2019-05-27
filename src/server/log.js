@@ -1,6 +1,4 @@
 var log = function (val) {
     console.log(val)
-};
-
-
-export default log;
+}
+export default log
